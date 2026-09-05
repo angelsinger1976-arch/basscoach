@@ -9,6 +9,7 @@ const modules = [
   './session.test.js',
   './transcribe.test.js',
   './midi.test.js',
+  './midiImport.test.js',
   './worklet.test.js',
 ];
 

@@ -55,7 +55,7 @@ micrófono → filtro paso bajo ~500 Hz → detector YIN → RMS/confianza
 - **NoteTracker**: mediana móvil de 5 frames anti-errores-de-octava, **estabilización de N frames iguales consecutivos** para ignorar el transitorio de ataque, cálculo de **cents** `±1200·log2(f/f0)`, y validación **±20 cents** (configurable 5–50).
 - Rendimiento: ~3–5 ms de CPU por frame en el worklet (visible en el panel lateral cuando el micrófono está activo).
 
-## 3. Transcripción offline con IA (Basic Pitch)
+## 3. Transcripción offline con IA (Basic Pitch) + Importación MIDI
 
 ```
 mp3/wav/ogg/m4a → decodeAudioData → mono → 22 050 Hz
@@ -63,6 +63,12 @@ mp3/wav/ogg/m4a → decodeAudioData → mono → 22 050 Hz
               → cleanBassLine (limpieza de fantasmas)
               → [{midi, startTime, duration, amplitude}]
               → tabla + MIDI + JSON + práctica en QUIZ
+
+.mid (SMF 0/1/2) → parser propio (cero dependencias)
+                → pista de bajo por heurística (programa GM 32-39,
+                  nombre, tesitura, canal 9 excluido)
+                → rango del afinado activo (shift de octavas)
+                → mismo pipeline: tabla + compases + QUIZ + biblioteca
 ```
 
 - **Modelo IA incluido** en `public/basic-pitch/` (model.json + shard, Apache-2.0 de Spotify) — **no requiere internet** tras la primera carga.
@@ -73,6 +79,22 @@ mp3/wav/ogg/m4a → decodeAudioData → mono → 22 050 Hz
 - **Fallback DSP propio** si la IA falla (sin WASM, sin memoria): lowpass + YIN + segmentación por RMS — monofónico, optimizado a graves, probado con 12 tests.
 - **Bug de librería documentado y esquivado**: pasar `minFreq` < 27.5 Hz (A0, el piso del modelo) a `outputToNotesPoly` hace que `constrainFrequency` calcule un índice negativo y `Array.fill(0, 0, índiceNegativo)` de JS interprete el negativo como relativo-al-final, **borrando toda la matriz de pitches** (0 notas) — por eso la primera implementación caía silenciosamente al fallback DSP. Solución: `minFreq: null` + filtro MIDI 21–60 después.
 - E2E verificado: WAV sintético de 5.7 s (afinación E1-A1-D2-G2 + riff) → **11/11 notas exactas** con motor `basic-pitch`, tiempos dentro de ±20 ms de la verdad de tierra.
+
+### Importación de MIDI (.mid) — tocar cualquier archivo con el bajo
+
+- **Parser SMF propio** (`src/lib/transcription/midiImport.js`, cero dependencias): formatos 0/1/2, PPQ y SMPTE, variable-length quantities, running status, note-off implícito (velocity 0), meta-events (tempo, nombre de pista), sysex ignorados.
+- **Elección de la pista de bajo por heurística** cuando hay varias: programa GM de bajo (32-39), nombre de pista (/bass|bajo|baixo/), tesitura (midi medio 26-50 y proporción en rango), canal 9 (batería) excluido.
+- **Adaptación al afinado activo**: las notas fuera del rango del diapasón se desplazan por octavas (p. ej. Mi♭1=27 no existe en std4 → suena una octava arriba; en std5/dropD queda tal cual).
+- **Fusión de notas**: misma nota duplicada a <30 ms se une en la más larga; re-triggers reales se conservan.
+- **Selector de compases** para canciones largas: por defecto practicas 4 compases; "Todo" carga la pieza completa. El tempo del MIDI se usa para el tamaño de compás (4/4).
+- **Demo incluida**: botón "🎸 Probar demo" carga `demo-bass.mid` (PRESIDENTE, 179 notas, 105 bpm, 3 min).
+- E2E verificado con el MIDI real del usuario: 179 notas, tempo 105, pista elegida por tesitura (el archivo usa programa 4, piano eléctrico).
+
+### Biblioteca local persistente ("cuando se suban se almacenarán")
+
+- Toda importación/transcripción se **autoguarda** en `localStorage` (`basscoach.library.v1`): nombre, motor, nº de notas, duración, tempo, fecha.
+- Lista "Tu biblioteca" con **▶ Cargar** (restaura notas + compases + tempo) y **🗑** por ítem; máximo 60 secuencias (la más vieja se descarta si la cuota se llena).
+- **Persiste entre recargas** del navegador — verificado E2E: recargar la página mantiene la biblioteca intacta.
 
 ## 4. Motor de práctica (ciclo de avance)
 
@@ -102,7 +124,7 @@ cargar secuencia JSON → índice 0 → iluminar nota en diapasón
 
 ## 6. Tests
 
-138 pruebas en Node, todas en verde:
+193 pruebas en Node, todas en verde:
 
 ```
 npm test
@@ -122,12 +144,12 @@ npm install
 npm run dev      # desarrollo (http://localhost:5173)
 npm run build    # producción → dist/
 npm run preview  # servir dist/ localmente
-npm test         # 138 tests
+npm test         # 193 tests
 ```
 
 - **MIC OFF/ON**: activar micrófono (pedirá permiso) — aparece el panel de diagnóstico con Hz/cents/CPU.
 - **STUDIO**: elegir tónica, categoría y escala → practicar en QUIZ.
-- **TRANSCRIPTION**: arrastrar un audio de bajo → tabla de notas + MIDI/JSON + "Practicar en QUIZ".
+- **TRANSCRIPTION**: arrastra un audio de bajo **o un MIDI (.mid)** → tabla de notas + selector de compases + MIDI/JSON + "Practicar en QUIZ". Botón **"🎸 Probar demo"** para cargar el MIDI incluido. Todo queda guardado en tu biblioteca local.
 - Requiere HTTPS o localhost para el micrófono (limitación del navegador, no de la app).
 
 ## 8. Despliegue público
@@ -153,10 +175,10 @@ El build usa `base: './'` en `vite.config.js` (rutas relativas) para poder servi
 ```
 basscoach/
 ├── dist/            ← build de producción (desplegable tal cual)
-├── public/          ├── manifest, sw.js, iconos, modelo IA, sample-bass.wav
+├── public/          ├── manifest, sw.js, iconos, modelo IA, sample-bass.wav, demo-bass.mid
 ├── src/             ├── código fuente completo
 ├── scripts/         ├── make_icons, make_sample_wav, diag/verify Basic Pitch
-├── test/            ├── 138 pruebas Node
+├── test/            ├── 193 pruebas Node
 ├── package.json     └── dependencias (@spotify/basic-pitch únicamente)
 └── README.md        └── este documento
 ```

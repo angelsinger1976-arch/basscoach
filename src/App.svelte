@@ -225,7 +225,7 @@
         <Metro />
       </div>
       <div class="view" class:active={tab === 'transcription'}>
-        <Transcription onSendToQuiz={sendToQuiz} />
+        <Transcription {tuning} {latin} onSendToQuiz={sendToQuiz} />
       </div>
       <div class="view" class:active={tab === 'settings'}>
         <SettingsView bind:settings engineOn={micOn} onChange={onSettingsChange} onRestartMic={restartMic} />
