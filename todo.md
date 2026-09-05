@@ -46,8 +46,20 @@
 ## 7. Repo propio basscoach (público) + GitHub Pages en vivo
 - [x] Verificar paths relativos de PWA (manifest/sw) para subruta /basscoach/
 - [x] Crear repo público basscoach y push directo a main (sin PR)
-- [ ] Reconstruir dist/ (se perdió al preparar la rama gh-pages) y commitear todo.md corregido
-- [ ] Rama gh-pages correcta (dist completo + .nojekyll) — el force-push dejó solo 1 archivo
-- [ ] Verificar build de Pages y URL en vivo (E2E)
-- [ ] Fusionar PR #1 de salcidostudio-bass (cero acciones pendientes)
-- [ ] Entrega final con todas las URLs
+- [x] Reconstruir dist/ (se perdió al preparar la rama gh-pages) y commitear todo.md corregido
+- [x] Rama gh-pages correcta (dist completo + .nojekyll, 14 archivos)
+- [x] Verificar build de Pages y URL en vivo (E2E: 11/11 notas, motor basic-pitch)
+- [x] Fusionar PR #1 de salcidostudio-bass (MERGED)
+- [x] README final con URL de Pages + zip regenerado (78 archivos) + push a main
+- [x] Entrega final con todas las URLs
+
+## 8. Importar MIDI (.mid) para practicar con el bajo
+- [x] Leer código actual de transcripción/QUIZ y el exportador MIDI existente
+- [x] Módulo midiImport.js: parser SMF (formato 0/1/2, tempo map, SMPTE, running status, multitrack→pista de bajo por heurística, rango del afinado activo)
+- [x] UI: dropzone/botón que acepte .mid/.midi → tabla de notas → selector de compases → Practicar en QUIZ
+- [x] public/demo-bass.mid = MIDI real del usuario (PRESIDENTE, 179 notas, 105 bpm) + botón "🎸 Probar demo"
+- [x] Tests Node del parser (roundtrip encoder↔parser + tempo changes + multitrack + SMPTE + octavas + errores) — 55 pruebas, total 193
+- [x] Biblioteca local persistente (localStorage, autoguardado, ▶ Cargar/🗑) — "cuando se suban se almacenarán"
+- [x] Build + E2E navegador (demo .mid → 179 notas → compases → QUIZ; biblioteca persiste tras recargar)
+- [x] Push a main + gh-pages + verificar Pages en vivo (E2E en https://angelsinger1976-arch.github.io/basscoach/: demo → 179 notas → c.1-4 → QUIZ)
+- [x] Entrega final
