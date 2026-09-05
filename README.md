@@ -18,7 +18,9 @@
 │   ├── views/Tuner.svelte       afinación con aguja y cents │
 │   ├── views/Metro.svelte       metrónomo con acentos       │
 │   ├── views/Transcription.svelte  audio IA → notas         │
-│   └── views/Settings.svelte    parámetros del motor        │
+│   ├── views/Tuning.svelte    pestaña AFINADO: 6 afinados    │
+│                              + afinación por cuerda         │
+│   └── views/Settings.svelte  API key · line-in · motor YIN  │
 │                                                            │
 │  components/Fretboard.svelte  diapasón SVG 4/5 cuerdas     │
 │                             × 15 trastes, círculos         │
@@ -149,6 +151,8 @@ npm test         # 193 tests
 
 - **MIC OFF/ON**: activar micrófono (pedirá permiso) — aparece el panel de diagnóstico con Hz/cents/CPU.
 - **STUDIO**: elegir tónica, categoría y escala → practicar en QUIZ.
+- **AFINADO** (pestaña nueva): elegir el afinado del bajo (Standard 4, Drop D, Eb, D, Standard 5 con B0, Drop C♯) con tarjetas visuales de cuerdas al aire y Hz — se aplica a toda la app y se guarda en el dispositivo. Mini afinador por cuerda en vivo.
+- **⚙ Ajustes**: **API key** opcional (solo localStorage, la app no la envía a ningún servidor), **entrada de audio del bajo** (elige el line-in de tu interfaz USB / mic de contacto / micro del ordenador, con botón «Probar entrada» y medidor de nivel RMS en vivo), y parámetros del detector YIN. Todos los ajustes persisten entre recargas.
 - **TRANSCRIPTION**: arrastra un audio de bajo **o un MIDI (.mid)** → tabla de notas + selector de compases + MIDI/JSON + "Practicar en QUIZ". Botón **"🎸 Probar demo"** para cargar el MIDI incluido. Todo queda guardado en tu biblioteca local.
 - Requiere HTTPS o localhost para el micrófono (limitación del navegador, no de la app).
 

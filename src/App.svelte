@@ -8,6 +8,7 @@
   import { onMount, onDestroy } from 'svelte';
   import Studio from './views/Studio.svelte';
   import Tuner from './views/Tuner.svelte';
+  import Tuning from './views/Tuning.svelte';
   import Metro from './views/Metro.svelte';
   import Quiz from './views/Quiz.svelte';
   import Transcription from './views/Transcription.svelte';
@@ -19,6 +20,7 @@
     { id: 'studio', label: 'STUDIO' },
     { id: 'quiz', label: 'QUIZ' },
     { id: 'tuner', label: 'TUNER' },
+    { id: 'tuning', label: 'AFINADO' },
     { id: 'metro', label: 'METRO' },
     { id: 'transcription', label: 'TRANSCRIPTION' },
     { id: 'settings', label: '⚙' },
@@ -41,10 +43,11 @@
   let selectedCategory = 'majPent';
   let latin = true;
   let showDegrees = true;
-  let tuning = 'std4';
+  let tuning = 'std4'; // se sincroniza con settings tras cargarlos (abajo)
 
   // Config del motor (vive en Settings y se aplica en vivo)
-  let settings = {
+  const SETTINGS_KEY = 'basscoach.settings.v1';
+  const DEFAULT_SETTINGS = {
     lowpassHz: 500,
     centsTolerance: 25,
     windowMs: 96,
@@ -57,6 +60,18 @@
     deviceId: '',
     tuning: 'std4',
   };
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    } catch {}
+    return { ...DEFAULT_SETTINGS };
+  }
+  function persistSettings() {
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {}
+  }
+  let settings = loadSettings();
+  tuning = settings.tuning || 'std4'; // aplica el afinado persistido
 
   // Secuencia pendiente hacia QUIZ
   let pendingSequence = null;
@@ -126,7 +141,25 @@
   function onSettingsChange(s) {
     settings = { ...settings, ...s };
     tuning = settings.tuning || 'std4';
+    persistSettings();
     applyEngineSettings();
+  }
+
+  function onTuningPicked(k) {
+    settings = { ...settings, tuning: k };
+    tuning = k;
+    persistSettings();
+    applyEngineSettings();
+    toast(`🎸 Afinado: ${TUNINGS_NAME(k)} — aplicado a toda la app`, 'ok');
+  }
+
+  function TUNINGS_NAME(k) {
+    // import perezoso evitado: nombre legible del afinado
+    const names = {
+      std4: 'Standard 4', dropD: 'Drop D', eb4: 'Eb Standard',
+      dStd4: 'D Standard', std5: 'Standard 5 (B0)', dropCsharp4: 'Drop C♯',
+    };
+    return names[k] || k;
   }
 
   function sendToQuiz(seq) {
@@ -172,7 +205,7 @@
 
   <div class="main">
     <!-- ============ Sidebar Bassmate ============ -->
-    <aside class="sidebar" class:hide={tab === 'settings'}>
+    <aside class="sidebar" class:hide={tab === 'settings' || tab === 'tuning'}>
       <h4>Nota raíz</h4>
       <div class="note-grid">
         {#each NOTE_PCS as pc}
@@ -220,6 +253,9 @@
       </div>
       <div class="view" class:active={tab === 'tuner'}>
         <Tuner {live} {tuning} {latin} />
+      </div>
+      <div class="view" class:active={tab === 'tuning'}>
+        <Tuning {tuning} {latin} {live} onTuningChange={onTuningPicked} />
       </div>
       <div class="view" class:active={tab === 'metro'}>
         <Metro />
