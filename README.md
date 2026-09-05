@@ -170,16 +170,27 @@ https://angelsinger1976-arch.github.io/basscoach/
 https://sites.super.myninja.ai/695831ba-733e-461a-8050-c534361cfff8/410133af/index.html
 ```
 
-Repositorio: https://github.com/angelsinger1976-arch/basscoach (rama `gh-pages` = build, `main` = código fuente).
+Repositorio: https://github.com/angelsinger1976-arch/basscoach — **un solo branch (`main`)**: el código fuente y el build compilado (en `docs/`, que es lo que sirve GitHub Pages). Sin ramas de despliegue duplicadas.
 
-El build usa `base: './'` en `vite.config.js` (rutas relativas) para poder servirse desde cualquier subdirectorio. `dist/` es desplegable tal cual en cualquier hosting estático (S3, GitHub Pages con base correcta, Netlify, etc.).
+El build usa `base: './'` en `vite.config.js` (rutas relativas) para poder servirse desde cualquier subdirectorio. Tanto `dist/` como `docs/` son desplegables tal cual en cualquier hosting estático (S3, GitHub Pages con base correcta, Netlify, etc.).
+
+### Cómo usar / instalar la app (no hay que instalar nada a mano)
+
+- **Uso directo:** abrir https://angelsinger1976-arch.github.io/basscoach/ en el navegador (móvil o PC) y listo. Funciona offline tras la primera visita (service worker).
+- **Instalar como app (PWA):** en Chrome/Edge → menú ⋮ → «Instalar aplicación» / «Añadir a pantalla de inicio»; en Safari iOS → Compartir → «Añadir a pantalla de inicio».
+- **Código fuente:** clonar el repo (`git clone https://github.com/angelsinger1976-arch/basscoach.git`) y `npm install && npm run build`.
+
+### Publicar cambios (un solo paso)
+
+`npm run build` y copiar `dist/*` a `docs/` (o simplemente actualizar `docs/`), commit a `main` y push. GitHub Pages reconstruye automáticamente desde `main/docs/`.
 
 ## 9. Estructura del zip
 
 ```
 basscoach/
-├── dist/            ← build de producción (desplegable tal cual)
-├── public/          ├── manifest, sw.js, iconos, modelo IA, sample-bass.wav, demo-bass.mid
+├── docs/            ← build de producción publicado (lo que sirve GitHub Pages desde main)
+├── dist/            ← build de producción (salida local, no versionado)
+├── public/          ├── manifest, sw.js (caché v2), iconos, modelo IA, sample-bass.wav, demo-bass.mid
 ├── src/             ├── código fuente completo
 ├── scripts/         ├── make_icons, make_sample_wav, diag/verify Basic Pitch
 ├── test/            ├── 193 pruebas Node
