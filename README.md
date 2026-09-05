@@ -132,11 +132,19 @@ npm test         # 138 tests
 
 ## 8. Despliegue público
 
-**URL verificada E2E** (carga, subida de WAV, motor `basic-pitch`, 11/11 notas, exportación JSON/MIDI):
+**GitHub Pages (repo propio, en vivo):**
+
+```
+https://angelsinger1976-arch.github.io/basscoach/
+```
+
+**Deploy alternativo (verificado E2E)** — carga, subida de WAV, motor `basic-pitch`, 11/11 notas, exportación JSON/MIDI:
 
 ```
 https://sites.super.myninja.ai/695831ba-733e-461a-8050-c534361cfff8/410133af/index.html
 ```
+
+Repositorio: https://github.com/angelsinger1976-arch/basscoach (rama `gh-pages` = build, `main` = código fuente).
 
 El build usa `base: './'` en `vite.config.js` (rutas relativas) para poder servirse desde cualquier subdirectorio. `dist/` es desplegable tal cual en cualquier hosting estático (S3, GitHub Pages con base correcta, Netlify, etc.).
 
