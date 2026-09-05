@@ -1,25 +1,19 @@
-# BassCoach — Tarea: ajustes de app (API key + line-in + pestaña AFINADO) + GitHub
+# BassCoach — Consolidar a UN solo branch + claridad de instalación
 
-## 1. Investigación
-- [x] Leer Settings.svelte (ya tiene deviceId + tuning), App.svelte (flujo settings/tuning), AudioEngine (constraints getUserMedia), TUNINGS (6 afinados)
+## 1. Verificación de estado
+- [x] Revisar branches locales, remoto, token, sw.js cache y .gitignore
+- [ ] Confirmar ramas exactas en GitHub (basscoach + salcidostudio-bass) y Pages source vía API
 
-## 2. Página AJUSTES: API key + line-in mejorado
-- [x] Añadir campo API key (guardado local, nunca se envía: app es 100% local) con mostrar/ocultar y probar
-- [x] Sección "Entrada de audio del bajo" propia: listar dispositivos con etiquetas, refrescar, probar nivel de entrada (medidor en vivo) para elegir el line-in correcto
-- [x] Guardar deviceId en settings (persistente)
+## 2. Consolidar basscoach a UN solo branch (main)
+- [ ] Bump versión de caché del service worker (basscoach-v2 → usuarios PWA reciben update)
+- [ ] Rebuild de dist
+- [ ] Copiar dist/* → docs/ (con .nojekyll) en main, commit + push a basscoach
+- [ ] Cambiar Pages source: gh-pages → main /docs (API PUT)
+- [ ] Borrar branch gh-pages remoto (y limpiar ramas locales sobrantes)
+- [ ] Verificar URL viva sirve la nueva compilación (E2E navegador)
 
-## 3. Pestaña AFINADO (nueva)
-- [x] Crear src/views/Tuning.svelte: selección de afinado (6 presets), vista del diapasón con las cuerdas al aire, pantalla de afinar por cuerda (Hz/cents/nota viva del motor)
-- [x] Añadir pestaña "AFINADO" en App.svelte (entre TUNER y METRO) y montar la vista
-
-## 4. Persistencia de settings
-- [x] settings + tuning persistir en localStorage (recargar mantiene ajustes)
-
-## 5. Tests + build + E2E
-- [x] npm test (193) + build OK
-- [x] E2E navegador: pestaña AFINADO render, pick de afinado cambia diapasón, settings persisten tras recargar, API key input funciona
-
-## 6. GitHub
-- [x] Commit + push main (angelsinger1976-arch/basscoach)
-- [x] Rebuild gh-pages + force-push + verificar Pages vivo E2E
-- [x] Zip + entrega final con URLs
+## 3. Documentación y entrega
+- [ ] Actualizar README (docs/, un solo branch, instrucciones de instalación claras)
+- [ ] Regenerar basscoach.zip
+- [ ] Commit final + push main
+- [ ] Explicar al usuario qué versión usar (URL viva PWA / zip / branch único)
