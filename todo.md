@@ -34,8 +34,6 @@
 - [x] PWA: manifest, service worker, iconos (192/512/maskable)
 - [x] Verificación visual en navegador (screenshots de cada vista)
 - [x] Despliegue estático + zip + README técnico
-<<<<<<< Updated upstream
-=======
 
 ## 6. Publicación en GitHub (repo angelsinger1976-arch/salcidostudio-bass)
 - [x] Autenticar gh CLI con el token del usuario (sin exponerlo en outputs)
@@ -46,10 +44,10 @@
 - [x] Entregar enlaces finales (PR, repo, demo pública)
 
 ## 7. Repo propio basscoach (público) + GitHub Pages en vivo
-- [ ] Verificar paths relativos de PWA (manifest/sw) para subruta /basscoach/
-- [ ] Crear repo basscoach (público) y push directo a main (sin PR)
-- [ ] Rama gh-pages con el build (dist) + .nojekyll
-- [ ] Activar Pages (source: gh-pages) y verificar URL en vivo
+- [x] Verificar paths relativos de PWA (manifest/sw) para subruta /basscoach/
+- [x] Crear repo público basscoach y push directo a main (sin PR)
+- [ ] Reconstruir dist/ (se perdió al preparar la rama gh-pages) y commitear todo.md corregido
+- [ ] Rama gh-pages correcta (dist completo + .nojekyll) — el force-push dejó solo 1 archivo
+- [ ] Verificar build de Pages y URL en vivo (E2E)
 - [ ] Fusionar PR #1 de salcidostudio-bass (cero acciones pendientes)
-- [ ] E2E en la URL de Pages y entrega final
->>>>>>> Stashed changes
+- [ ] Entrega final con todas las URLs
