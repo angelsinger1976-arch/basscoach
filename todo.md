@@ -34,3 +34,22 @@
 - [x] PWA: manifest, service worker, iconos (192/512/maskable)
 - [x] Verificación visual en navegador (screenshots de cada vista)
 - [x] Despliegue estático + zip + README técnico
+<<<<<<< Updated upstream
+=======
+
+## 6. Publicación en GitHub (repo angelsinger1976-arch/salcidostudio-bass)
+- [x] Autenticar gh CLI con el token del usuario (sin exponerlo en outputs)
+- [x] Inspeccionar estado del repo remoto (privado, stub README, 1 commit)
+- [x] Ajustar autoría del commit (usuario, email noreply) y crear rama feature
+- [x] Push de la rama + PR #1 a main (50 archivos, +7016 líneas, mergeable)
+- [x] CI: workflow excluido del push (token sin scope `workflow`); documentado en el PR cómo activarlo. Pages no disponible (repo privado plan free), documentado igualmente
+- [x] Entregar enlaces finales (PR, repo, demo pública)
+
+## 7. Repo propio basscoach (público) + GitHub Pages en vivo
+- [ ] Verificar paths relativos de PWA (manifest/sw) para subruta /basscoach/
+- [ ] Crear repo basscoach (público) y push directo a main (sin PR)
+- [ ] Rama gh-pages con el build (dist) + .nojekyll
+- [ ] Activar Pages (source: gh-pages) y verificar URL en vivo
+- [ ] Fusionar PR #1 de salcidostudio-bass (cero acciones pendientes)
+- [ ] E2E en la URL de Pages y entrega final
+>>>>>>> Stashed changes
